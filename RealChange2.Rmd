@@ -1,0 +1,100 @@
+---
+title: "RealChangeAnalysis"
+author: "Camille Zaug"
+date: "5/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(klaR)
+```
+
+
+```{r}
+data <- read.csv("realchange1.csv")
+data1 <- data[,-c(34:43)]
+
+head(data1)
+```
+
+
+
+
+
+```{r}
+summary(data1)
+```
+
+
+
+
+
+
+```{r}
+fit <- lm(Post.hours~Living+Living:Primary.income,data = data1)
+```
+
+
+```{r}
+summary(fit)
+```
+
+
+```{r}
+boxplot(data1$Post.hours~data1$Primary.income, ylab = "Hours spent at post", xlab = "Living situation (least to most stable)")
+```
+
+
+```{r}
+data2 = data1[,c("Primary.income","Post.hours")]
+data2 = na.omit(data2)
+
+data2$Primary.income<-droplevels(data2$Primary.income)
+
+#data2 <- data2 %>% merge(data2,ifelse(data2$Primary.income=="Yes",1,0))
+
+summary(data2)
+```
+
+```{r}
+
+
+data3 = data1[,c("Post.hours","Living")]
+data3 = na.omit(data2)
+
+#data2$Primary.income<-droplevels(data2$Primary.income)
+
+#data2 <- data2 %>% merge(data2,ifelse(data2$Primary.income=="Yes",1,0))
+
+summary(data3)
+plot(data2$Primary.income,data2$Post.hours,xlab="Primary Income",ylab="Hours Spent at Post")
+```
+
+
+```{r}
+boxplot(Post.hours~Living, data = data1, ylab = 'Hours Spent at Post',xlab="Living Situation (Unstable to Stable)")
+stripchart(Post.hours~Living, vertical = TRUE, data = data1, 
+    method = "jitter", add = TRUE, pch = 20, col = 'blue')
+```
+
+
+```{r}
+fit <- lm(Post.hours~Primary.income,data = data2)
+summary(fit)
+```
+
+
+```{r}
+levels(data2$Primary.income)
+```
+
+```{r}
+plot(jitter(data1$Article.Fam,.2),jitter(data1$Post.hours),pch=20,xlab ="Living situation stability (least to most stable)", ylab = "Hours spent at post", xaxp  = c(1, 3, 2))
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
